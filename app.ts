@@ -1,10 +1,23 @@
+
+/*
+
+learning queries: https://www.w3schools.com/mysql/default.asp
+user prompt: https://www.npmjs.com/package/@types/prompt-sync#additional-details
+for db client library : https://sidorares.github.io/node-mysql2/docs/documentation/typescript-examples
+typescript setup : Mr. Ian Terada General Assembly
+database connection : Mr. Ian Terada General Assembly & Mr. Joshua Levine of General Assembly
+mysql installation (not used): Mr. Matthew Huntington of General Assembly
+mysql/promise installation : Mr. Google
+*/
+
+
 import promptSync = require('prompt-sync');
 import * as dotenv from 'dotenv'
 dotenv.config()
 import * as mysql from 'mysql2/promise'
 const get_user_input = promptSync()
 
-const questionToUser: Function = (question: string) =>  { 
+const questionToUser: Function = (question: string) :string =>  { 
         return get_user_input(`${question}`) 
 }
 
@@ -12,10 +25,10 @@ let mainMenu: string
 let inMenu: boolean = true
         
         
-const main = async() => {
+export const main = async() :Promise<void> => {
 
         //db
-        const  connection = await mysql.createConnection({
+        const  connection:mysql.Connection = await mysql.createConnection({
                 host: process.env.MYSQL_HOST,
                 user: 'root',
                 password: process.env.MYSQL_PASSWORD,
@@ -23,24 +36,23 @@ const main = async() => {
         })
 
 
-        const createCompany = async (name: string) :Promise<void> => {
-
+        const createCompany = async () :Promise<void> => {
+                const companyNameToAdd:string = questionToUser("Please Enter Company Name: ")
                 const query = 'INSERT INTO companies (name) VALUES (?)'
 
-                const [result] = await connection.execute(query, [name])
-                console.log(`${name} added successfully!`,)
+                const [result] = await connection.execute(query, [companyNameToAdd])
+                console.log(`${companyNameToAdd} added successfully!`,)
 
         }
         const showCompanies = async (): Promise<void> => {
 
                 const query = 'SELECT * FROM companies;'
 
-                const [result]:any = await connection.execute(query)
+                const [result]: any = await connection.execute(query)
                 result.forEach((company:any) => {
                         console.log(`${company.id} ${company.name}`)
                 });
         }
-
         const editCompany = async () :Promise<void> => {
                 await showCompanies()
                 
@@ -55,7 +67,6 @@ const main = async() => {
 
                 console.log(`${newCompanyName} updated successfully!`,)
         }
-
         const deleteCompany = async () :Promise<void> => {
                 await showCompanies()
                 //DELETE FROM table_name WHERE condition; w3schools
@@ -66,20 +77,19 @@ const main = async() => {
 
                 console.log('Company Successfully Deleted')
         }
-
-        const companySubMenu = async() => {
+        const companySubMenu = async() :Promise<void> => {
                 
-                let isOnCampanySubMenu = true
+                let isOnCampanySubMenu: boolean = true
                 
                 
                 while (isOnCampanySubMenu) {
                         console.log('Companies Menu:\n\n1.Add Company\n2.View All Companies\n3.Edit Company\n4.Delete Company\n5.Back to Main menu\n')
-                        let companySubMenu = questionToUser("Companies Menu[1~4]: ")
+                        let companySubMenu:string = questionToUser("Companies Menu[1~5]: ")
 
                         switch (companySubMenu) {
                                 case "1":
-                                        const companyNameToAdd = questionToUser("Please Enter Company Name: ")
-                                        await createCompany(companyNameToAdd)
+                                        
+                                        await createCompany()
                                         break;
                                 case "2":
                                         console.log('All Companies:')
@@ -90,7 +100,6 @@ const main = async() => {
                                         
                                         console.log('Edit Company Details:\n')
                                         await editCompany()
-                                        isOnCampanySubMenu = false
                                         break;
                                 case "4":
                                         console.log('Delete Company:\n')
@@ -108,6 +117,51 @@ const main = async() => {
                 }
         }
 
+
+        const createEmployee = async () :Promise<void> => {
+                const employeeNameToAdd: string = questionToUser("Please Enter Employee Name: ")
+                const employeeAgeToAdd: string = questionToUser("Please Enter Employee Age: ")
+                const employerIdToAdd: string = questionToUser("Please Enter Employer Id: ")
+
+                const sql = 'INSERT INTO employees (name, age, employer_id) VALUES (?, ?, ?)'
+
+                const [result] = await connection.execute(sql, [employeeNameToAdd, employeeAgeToAdd, employerIdToAdd])
+                console.log(`${employeeNameToAdd} is saved.`)
+
+        }
+        const employeeSubMenu = async () :Promise<void> => {
+                let isOnEmployeeSubMenu: boolean = true
+
+                while (isOnEmployeeSubMenu) {
+                        console.log('Employees Menu:\n\n1.Add Employee\n2.View All Employees\n3.Edit Employee\n4.Delete Employee\n5.Back to Main menu\n')
+                        let employeeSubMenu:string = questionToUser("Employees Menu[1~5]: ")
+
+                        switch (employeeSubMenu) {
+                                case "1":
+                                        await createEmployee()
+                                        break;
+                                case "2":
+                                        console.log('View All Employees') 
+                                        break;
+                                case "3":
+                                        console.log('Edit Employee') 
+                                        break;
+                                case "4":
+                                        console.log('Delete Employee') 
+                                        break;
+                                case "5":
+                                        console.log("Back to main menu")
+                                        isOnEmployeeSubMenu = false
+                                        break
+                        
+                                default:
+                                        console.log("invalid input")
+                                        break;
+                        }
+                }
+
+        }
+
         while (inMenu) {
         
                 console.log("Please Select from the options below:\n\n1.Companies\n2.Employees\n3.Exit\n\n")
@@ -119,7 +173,7 @@ const main = async() => {
                                 await companySubMenu()
                                 break;
                         case "2":
-                                console.log("you choose employees info")
+                                await employeeSubMenu()
                                 break;
                         case "3":
                                 console.log("Goodbye!")

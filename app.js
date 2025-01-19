@@ -1,4 +1,14 @@
 "use strict";
+/*
+
+learning queries: https://www.w3schools.com/mysql/default.asp
+user prompt: https://www.npmjs.com/package/@types/prompt-sync#additional-details
+for db client library : https://sidorares.github.io/node-mysql2/docs/documentation/typescript-examples
+typescript setup : Mr. Ian Terada General Assembly
+database connection : Mr. Ian Terada General Assembly & Mr. Joshua Levine of General Assembly
+mysql installation (not used): Mr. Matthew Huntington of General Assembly
+mysql/promise installation : Mr. Google
+*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,6 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.main = void 0;
 var promptSync = require("prompt-sync");
 var dotenv = require("dotenv");
 dotenv.config();
@@ -47,7 +58,7 @@ var questionToUser = function (question) {
 var mainMenu;
 var inMenu = true;
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, createCompany, showCompanies, editCompany, deleteCompany, companySubMenu, _a;
+    var connection, createCompany, showCompanies, editCompany, deleteCompany, companySubMenu, createEmployee, employeeSubMenu, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, mysql.createConnection({
@@ -58,16 +69,17 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                 })];
             case 1:
                 connection = _b.sent();
-                createCompany = function (name) { return __awaiter(void 0, void 0, void 0, function () {
-                    var query, result;
+                createCompany = function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var companyNameToAdd, query, result;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
+                                companyNameToAdd = questionToUser("Please Enter Company Name: ");
                                 query = 'INSERT INTO companies (name) VALUES (?)';
-                                return [4 /*yield*/, connection.execute(query, [name])];
+                                return [4 /*yield*/, connection.execute(query, [companyNameToAdd])];
                             case 1:
                                 result = (_a.sent())[0];
-                                console.log("".concat(name, " added successfully!"));
+                                console.log("".concat(companyNameToAdd, " added successfully!"));
                                 return [2 /*return*/];
                         }
                     });
@@ -126,7 +138,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                     });
                 }); };
                 companySubMenu = function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var isOnCampanySubMenu, companySubMenu_1, _a, companyNameToAdd;
+                    var isOnCampanySubMenu, companySubMenu_1, _a;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
                             case 0:
@@ -134,8 +146,8 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 _b.label = 1;
                             case 1:
                                 if (!isOnCampanySubMenu) return [3 /*break*/, 13];
-                                console.log('Companies Menu:\n\n1.Add Company\n2.View All Companies\n3.Edit Company\n4. Delete Company\n5.Back to Main menu\n');
-                                companySubMenu_1 = questionToUser("Companies Menu[1~4]: ");
+                                console.log('Companies Menu:\n\n1.Add Company\n2.View All Companies\n3.Edit Company\n4.Delete Company\n5.Back to Main menu\n');
+                                companySubMenu_1 = questionToUser("Companies Menu[1~5]: ");
                                 _a = companySubMenu_1;
                                 switch (_a) {
                                     case "1": return [3 /*break*/, 2];
@@ -145,9 +157,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     case "5": return [3 /*break*/, 10];
                                 }
                                 return [3 /*break*/, 11];
-                            case 2:
-                                companyNameToAdd = questionToUser("Please Enter Company Name: ");
-                                return [4 /*yield*/, createCompany(companyNameToAdd)];
+                            case 2: return [4 /*yield*/, createCompany()];
                             case 3:
                                 _b.sent();
                                 return [3 /*break*/, 12];
@@ -163,7 +173,6 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 return [4 /*yield*/, editCompany()];
                             case 7:
                                 _b.sent();
-                                isOnCampanySubMenu = false;
                                 return [3 /*break*/, 12];
                             case 8:
                                 console.log('Delete Company:\n');
@@ -183,37 +192,101 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                         }
                     });
                 }); };
+                createEmployee = function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var employeeNameToAdd, employeeAgeToAdd, employerIdToAdd, sql, result;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                employeeNameToAdd = questionToUser("Please Enter Employee Name: ");
+                                employeeAgeToAdd = questionToUser("Please Enter Employee Age: ");
+                                employerIdToAdd = questionToUser("Please Enter Employer Id: ");
+                                sql = 'INSERT INTO employees (name, age, employer_id) VALUES (?, ?, ?)';
+                                return [4 /*yield*/, connection.execute(sql, [employeeNameToAdd, employeeAgeToAdd, employerIdToAdd])];
+                            case 1:
+                                result = (_a.sent())[0];
+                                console.log("".concat(employeeNameToAdd, " is saved."));
+                                return [2 /*return*/];
+                        }
+                    });
+                }); };
+                employeeSubMenu = function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var isOnEmployeeSubMenu, employeeSubMenu_1, _a;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                isOnEmployeeSubMenu = true;
+                                _b.label = 1;
+                            case 1:
+                                if (!isOnEmployeeSubMenu) return [3 /*break*/, 10];
+                                console.log('Employees Menu:\n\n1.Add Employee\n2.View All Employees\n3.Edit Employee\n4.Delete Employee\n5.Back to Main menu\n');
+                                employeeSubMenu_1 = questionToUser("Employees Menu[1~5]: ");
+                                _a = employeeSubMenu_1;
+                                switch (_a) {
+                                    case "1": return [3 /*break*/, 2];
+                                    case "2": return [3 /*break*/, 4];
+                                    case "3": return [3 /*break*/, 5];
+                                    case "4": return [3 /*break*/, 6];
+                                    case "5": return [3 /*break*/, 7];
+                                }
+                                return [3 /*break*/, 8];
+                            case 2: return [4 /*yield*/, createEmployee()];
+                            case 3:
+                                _b.sent();
+                                return [3 /*break*/, 9];
+                            case 4:
+                                console.log('View All Employees');
+                                return [3 /*break*/, 9];
+                            case 5:
+                                console.log('Edit Employee');
+                                return [3 /*break*/, 9];
+                            case 6:
+                                console.log('Delete Employee');
+                                return [3 /*break*/, 9];
+                            case 7:
+                                console.log("Back to main menu");
+                                isOnEmployeeSubMenu = false;
+                                return [3 /*break*/, 9];
+                            case 8:
+                                console.log("invalid input");
+                                return [3 /*break*/, 9];
+                            case 9: return [3 /*break*/, 1];
+                            case 10: return [2 /*return*/];
+                        }
+                    });
+                }); };
                 _b.label = 2;
             case 2:
-                if (!inMenu) return [3 /*break*/, 9];
+                if (!inMenu) return [3 /*break*/, 10];
                 console.log("Please Select from the options below:\n\n1.Companies\n2.Employees\n3.Exit\n\n");
                 mainMenu = questionToUser("[1~3]: ");
                 _a = mainMenu;
                 switch (_a) {
                     case "1": return [3 /*break*/, 3];
                     case "2": return [3 /*break*/, 5];
-                    case "3": return [3 /*break*/, 6];
+                    case "3": return [3 /*break*/, 7];
                 }
-                return [3 /*break*/, 7];
+                return [3 /*break*/, 8];
             case 3: return [4 /*yield*/, companySubMenu()];
             case 4:
                 _b.sent();
-                return [3 /*break*/, 8];
-            case 5:
-                console.log("you choose employees info");
-                return [3 /*break*/, 8];
+                return [3 /*break*/, 9];
+            case 5: return [4 /*yield*/, employeeSubMenu()];
             case 6:
+                _b.sent();
+                return [3 /*break*/, 9];
+            case 7:
                 console.log("Goodbye!");
                 inMenu = false;
-                return [3 /*break*/, 8];
-            case 7:
+                return [3 /*break*/, 9];
+            case 8:
                 console.log("invalid input");
-                return [3 /*break*/, 8];
-            case 8: return [3 /*break*/, 2];
-            case 9:
+                return [3 /*break*/, 9];
+            case 9: return [3 /*break*/, 2];
+            case 10:
                 connection.end();
                 return [2 /*return*/];
         }
     });
 }); };
-main();
+exports.main = main;
+(0, exports.main)();
