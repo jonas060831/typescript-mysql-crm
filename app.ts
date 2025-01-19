@@ -44,18 +44,27 @@ const main = async() => {
         const editCompany = async () :Promise<void> => {
                 await showCompanies()
                 
-                const companyId = questionToUser('Enter Company Id: ')
+                const companyId: string = questionToUser('Enter Company Id: ')
                 
-                const newCompanyName = questionToUser('Enter New Name: ')
+                const newCompanyName: string = questionToUser('Enter New Name: ')
 
-
-                const query = 'UPDATE companies SET name = (?) WHERE id = (?)'
+                //w3schools
+                const query:string = 'UPDATE companies SET name = (?) WHERE id = (?)'
 
                 const [result] = await connection.execute(query, [newCompanyName, companyId])
 
                 console.log(`${newCompanyName} updated successfully!`,)
+        }
 
-                
+        const deleteCompany = async () :Promise<void> => {
+                await showCompanies()
+                //DELETE FROM table_name WHERE condition; w3schools
+                const query: string = "DELETE FROM companies WHERE id = (?);"
+
+                const companyId: string = questionToUser("Enter Company Id: ")
+                const [result] = await connection.execute(query, [companyId])
+
+                console.log('Company Successfully Deleted')
         }
 
         const companySubMenu = async() => {
@@ -64,7 +73,7 @@ const main = async() => {
                 
                 
                 while (isOnCampanySubMenu) {
-                        console.log('Companies Menu:\n\n1.Add Company\n2.View All Companies\n3.Edit Company\n4.Back to Main menu\n')
+                        console.log('Companies Menu:\n\n1.Add Company\n2.View All Companies\n3.Edit Company\n4.Delete Company\n5.Back to Main menu\n')
                         let companySubMenu = questionToUser("Companies Menu[1~4]: ")
 
                         switch (companySubMenu) {
@@ -84,6 +93,10 @@ const main = async() => {
                                         isOnCampanySubMenu = false
                                         break;
                                 case "4":
+                                        console.log('Delete Company:\n')
+                                        await deleteCompany()
+                                        break;
+                                case "5":
                                         console.log('Go back to main menu')
                                         isOnCampanySubMenu = false
                                         break;

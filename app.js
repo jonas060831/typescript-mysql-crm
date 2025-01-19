@@ -47,7 +47,7 @@ var questionToUser = function (question) {
 var mainMenu;
 var inMenu = true;
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, createCompany, showCompanies, editCompany, companySubMenu, _a;
+    var connection, createCompany, showCompanies, editCompany, deleteCompany, companySubMenu, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, mysql.createConnection({
@@ -95,13 +95,32 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                             case 0: return [4 /*yield*/, showCompanies()];
                             case 1:
                                 _a.sent();
-                                companyId = questionToUser('Enter Company Id:');
+                                companyId = questionToUser('Enter Company Id: ');
                                 newCompanyName = questionToUser('Enter New Name: ');
                                 query = 'UPDATE companies SET name = (?) WHERE id = (?)';
                                 return [4 /*yield*/, connection.execute(query, [newCompanyName, companyId])];
                             case 2:
                                 result = (_a.sent())[0];
-                                console.log("".concat(newCompanyName, " added successfully!"));
+                                console.log("".concat(newCompanyName, " updated successfully!"));
+                                return [2 /*return*/];
+                        }
+                    });
+                }); };
+                deleteCompany = function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var query, companyId, result;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, showCompanies()
+                                //DELETE FROM table_name WHERE condition; w3schools
+                            ];
+                            case 1:
+                                _a.sent();
+                                query = "DELETE FROM companies WHERE id = (?);";
+                                companyId = questionToUser("Enter Company Id: ");
+                                return [4 /*yield*/, connection.execute(query, [companyId])];
+                            case 2:
+                                result = (_a.sent())[0];
+                                console.log('Company Successfully Deleted');
                                 return [2 /*return*/];
                         }
                     });
@@ -114,46 +133,53 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 isOnCampanySubMenu = true;
                                 _b.label = 1;
                             case 1:
-                                if (!isOnCampanySubMenu) return [3 /*break*/, 11];
-                                console.log('Companies Menu:\n\n1.Add Company\n2.View All Companies\n3.Edit Company\n4.Back to Main menu\n');
-                                companySubMenu_1 = questionToUser("Companies Menu[1~3]: ");
+                                if (!isOnCampanySubMenu) return [3 /*break*/, 13];
+                                console.log('Companies Menu:\n\n1.Add Company\n2.View All Companies\n3.Edit Company\n4. Delete Company\n5.Back to Main menu\n');
+                                companySubMenu_1 = questionToUser("Companies Menu[1~4]: ");
                                 _a = companySubMenu_1;
                                 switch (_a) {
                                     case "1": return [3 /*break*/, 2];
                                     case "2": return [3 /*break*/, 4];
                                     case "3": return [3 /*break*/, 6];
                                     case "4": return [3 /*break*/, 8];
+                                    case "5": return [3 /*break*/, 10];
                                 }
-                                return [3 /*break*/, 9];
+                                return [3 /*break*/, 11];
                             case 2:
                                 companyNameToAdd = questionToUser("Please Enter Company Name: ");
                                 return [4 /*yield*/, createCompany(companyNameToAdd)];
                             case 3:
                                 _b.sent();
-                                return [3 /*break*/, 10];
+                                return [3 /*break*/, 12];
                             case 4:
                                 console.log('All Companies:');
                                 return [4 /*yield*/, showCompanies()];
                             case 5:
                                 _b.sent();
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
-                                return [3 /*break*/, 10];
+                                return [3 /*break*/, 12];
                             case 6:
                                 console.log('Edit Company Details:\n');
                                 return [4 /*yield*/, editCompany()];
                             case 7:
                                 _b.sent();
                                 isOnCampanySubMenu = false;
-                                return [3 /*break*/, 10];
+                                return [3 /*break*/, 12];
                             case 8:
+                                console.log('Delete Company:\n');
+                                return [4 /*yield*/, deleteCompany()];
+                            case 9:
+                                _b.sent();
+                                return [3 /*break*/, 12];
+                            case 10:
                                 console.log('Go back to main menu');
                                 isOnCampanySubMenu = false;
-                                return [3 /*break*/, 10];
-                            case 9:
+                                return [3 /*break*/, 12];
+                            case 11:
                                 console.log('invalid input');
-                                return [3 /*break*/, 10];
-                            case 10: return [3 /*break*/, 1];
-                            case 11: return [2 /*return*/];
+                                return [3 /*break*/, 12];
+                            case 12: return [3 /*break*/, 1];
+                            case 13: return [2 /*return*/];
                         }
                     });
                 }); };
