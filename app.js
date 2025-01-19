@@ -58,7 +58,7 @@ var questionToUser = function (question) {
 var mainMenu;
 var inMenu = true;
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, createCompany, showCompanies, editCompany, deleteCompany, companySubMenu, createEmployee, employeeSubMenu, _a;
+    var connection, createCompany, showCompanies, editCompany, deleteCompany, companySubMenu, createEmployee, showEmployeesByCompany, employeeSubMenu, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, mysql.createConnection({
@@ -209,6 +209,32 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                         }
                     });
                 }); };
+                showEmployeesByCompany = function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var selectedCompanyId, sql, employees, sql2, company;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                console.log('View Employees via Company: ');
+                                return [4 /*yield*/, showCompanies()];
+                            case 1:
+                                _a.sent();
+                                selectedCompanyId = questionToUser("Please Enter Company Id: ");
+                                sql = 'SELECT * FROM employees WHERE employer_id = (?)';
+                                return [4 /*yield*/, connection.execute(sql, [selectedCompanyId])];
+                            case 2:
+                                employees = (_a.sent())[0];
+                                sql2 = 'SELECT name FROM companies WHERE id = (?)';
+                                return [4 /*yield*/, connection.execute(sql2, [selectedCompanyId])];
+                            case 3:
+                                company = (_a.sent())[0];
+                                console.log("".concat(company[0].name, " employees:"));
+                                employees.forEach(function (employee) {
+                                    console.log("".concat(employee.id, ". name=").concat(employee.name, " age=").concat(employee.age));
+                                });
+                                return [2 /*return*/];
+                        }
+                    });
+                }); };
                 employeeSubMenu = function () { return __awaiter(void 0, void 0, void 0, function () {
                     var isOnEmployeeSubMenu, employeeSubMenu_1, _a;
                     return __generator(this, function (_b) {
@@ -217,40 +243,41 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 isOnEmployeeSubMenu = true;
                                 _b.label = 1;
                             case 1:
-                                if (!isOnEmployeeSubMenu) return [3 /*break*/, 10];
+                                if (!isOnEmployeeSubMenu) return [3 /*break*/, 11];
                                 console.log('Employees Menu:\n\n1.Add Employee\n2.View All Employees\n3.Edit Employee\n4.Delete Employee\n5.Back to Main menu\n');
                                 employeeSubMenu_1 = questionToUser("Employees Menu[1~5]: ");
                                 _a = employeeSubMenu_1;
                                 switch (_a) {
                                     case "1": return [3 /*break*/, 2];
                                     case "2": return [3 /*break*/, 4];
-                                    case "3": return [3 /*break*/, 5];
-                                    case "4": return [3 /*break*/, 6];
-                                    case "5": return [3 /*break*/, 7];
+                                    case "3": return [3 /*break*/, 6];
+                                    case "4": return [3 /*break*/, 7];
+                                    case "5": return [3 /*break*/, 8];
                                 }
-                                return [3 /*break*/, 8];
+                                return [3 /*break*/, 9];
                             case 2: return [4 /*yield*/, createEmployee()];
                             case 3:
                                 _b.sent();
-                                return [3 /*break*/, 9];
-                            case 4:
-                                console.log('View All Employees');
-                                return [3 /*break*/, 9];
+                                return [3 /*break*/, 10];
+                            case 4: return [4 /*yield*/, showEmployeesByCompany()];
                             case 5:
-                                console.log('Edit Employee');
-                                return [3 /*break*/, 9];
+                                _b.sent();
+                                return [3 /*break*/, 10];
                             case 6:
-                                console.log('Delete Employee');
-                                return [3 /*break*/, 9];
+                                console.log('Edit Employee');
+                                return [3 /*break*/, 10];
                             case 7:
+                                console.log('Delete Employee');
+                                return [3 /*break*/, 10];
+                            case 8:
                                 console.log("Back to main menu");
                                 isOnEmployeeSubMenu = false;
-                                return [3 /*break*/, 9];
-                            case 8:
+                                return [3 /*break*/, 10];
+                            case 9:
                                 console.log("invalid input");
-                                return [3 /*break*/, 9];
-                            case 9: return [3 /*break*/, 1];
-                            case 10: return [2 /*return*/];
+                                return [3 /*break*/, 10];
+                            case 10: return [3 /*break*/, 1];
+                            case 11: return [2 /*return*/];
                         }
                     });
                 }); };

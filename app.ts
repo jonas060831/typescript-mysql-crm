@@ -129,6 +129,30 @@ export const main = async() :Promise<void> => {
                 console.log(`${employeeNameToAdd} is saved.`)
 
         }
+
+        const showEmployeesByCompany = async () :Promise<void> => {
+
+                console.log('View Employees via Company: ')
+                await showCompanies()
+                
+                const selectedCompanyId = questionToUser("Please Enter Company Id: ")
+
+                const sql: string = 'SELECT * FROM employees WHERE employer_id = (?)'
+                //TODO typescript
+                const [employees]:any = await connection.execute(sql, [selectedCompanyId])
+
+                const sql2:string = 'SELECT name FROM companies WHERE id = (?)'
+                //TODO typescript
+                const [company]:any = await connection.execute(sql2, [selectedCompanyId])
+
+                console.log(`${company[0].name} employees:`)
+
+                employees.forEach((employee:any) => {
+                        console.log(`${employee.id}. ${employee.name} ${employee.age}`)
+                })
+
+
+        }
         const employeeSubMenu = async () :Promise<void> => {
                 let isOnEmployeeSubMenu: boolean = true
 
@@ -141,7 +165,7 @@ export const main = async() :Promise<void> => {
                                         await createEmployee()
                                         break;
                                 case "2":
-                                        console.log('View All Employees') 
+                                        await showEmployeesByCompany()
                                         break;
                                 case "3":
                                         console.log('Edit Employee') 
