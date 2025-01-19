@@ -58,20 +58,7 @@ var questionToUser = function (question) {
 var mainMenu;
 var inMenu = true;
 //classes
-var Company = /** @class */ (function () {
-    function Company(name) {
-        this.name = name;
-    }
-    return Company;
-}());
-var Employee = /** @class */ (function () {
-    function Employee(name, age, employer_id) {
-        this.name = name;
-        this.age = age;
-        this.employer_id = employer_id;
-    }
-    return Employee;
-}());
+var classes_1 = require("./classes");
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     var connection, createCompany, showCompanies, editCompany, deleteCompany, companySubMenu, createEmployee, showEmployees, showEmployeesByCompany, editEmployee, deleteEmployee, employeeSubMenu, _a;
     return __generator(this, function (_b) {
@@ -81,7 +68,9 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                     user: 'root',
                     password: process.env.MYSQL_PASSWORD,
                     database: process.env.MYSQL_DATABASE,
-                })];
+                })
+                //CRUD companies
+            ];
             case 1:
                 connection = _b.sent();
                 createCompany = function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -91,12 +80,13 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                             case 0:
                                 companyNameToAdd = questionToUser("Please Enter Company Name: ");
                                 query = 'INSERT INTO companies (name) VALUES (?)';
-                                newCompany = new Company(companyNameToAdd);
+                                newCompany = new classes_1.Company(companyNameToAdd);
                                 return [4 /*yield*/, connection.execute(query, [newCompany.name])];
                             case 1:
                                 result = (_a.sent())[0];
                                 console.log("".concat(companyNameToAdd, " added successfully!"));
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                console.clear();
                                 return [2 /*return*/];
                         }
                     });
@@ -127,12 +117,13 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 companyId = questionToUser('Enter Company Id: ');
                                 newCompanyName = questionToUser('Enter New Name: ');
                                 query = 'UPDATE companies SET name = (?) WHERE id = (?)';
-                                updatedCompany = new Company(newCompanyName);
+                                updatedCompany = new classes_1.Company(newCompanyName);
                                 return [4 /*yield*/, connection.execute(query, [updatedCompany.name, companyId])];
                             case 2:
                                 result = (_a.sent())[0];
                                 console.log("".concat(updatedCompany.name, " updated successfully!"));
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                console.clear();
                                 return [2 /*return*/];
                         }
                     });
@@ -153,6 +144,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 result = (_a.sent())[0];
                                 console.log('Company Successfully Deleted');
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                console.clear();
                                 return [2 /*return*/];
                         }
                     });
@@ -187,6 +179,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                             case 5:
                                 _b.sent();
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                console.clear();
                                 return [3 /*break*/, 12];
                             case 6:
                                 console.log('Edit Company Details:\n');
@@ -220,13 +213,14 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 employeeNameToAdd = questionToUser("Please Enter Employee Name: ");
                                 employeeAgeToAdd = questionToUser("Please Enter Employee Age: ");
                                 employerIdToAdd = questionToUser("Please Enter Employer Id: ");
-                                newEmployee = new Employee(employeeNameToAdd, parseInt(employeeAgeToAdd), parseInt(employerIdToAdd));
+                                newEmployee = new classes_1.Employee(employeeNameToAdd, parseInt(employeeAgeToAdd), parseInt(employerIdToAdd));
                                 sql = 'INSERT INTO employees (name, age, employer_id) VALUES (?, ?, ?)';
                                 return [4 /*yield*/, connection.execute(sql, [newEmployee.name, newEmployee.age, newEmployee.employer_id])];
                             case 1:
                                 _ = (_a.sent())[0];
                                 console.log("".concat(newEmployee.name, " is saved."));
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                console.clear();
                                 return [2 /*return*/];
                         }
                     });
@@ -291,13 +285,14 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 employeeName = questionToUser('Enter New Name: ');
                                 employeeAge = questionToUser('Enter New Age: ');
                                 companyId = questionToUser('Enter Company Id: ');
-                                updatedEmployee = new Employee(employeeName, employeeAge, companyId);
+                                updatedEmployee = new classes_1.Employee(employeeName, employeeAge, companyId);
                                 sql = 'UPDATE employees SET name = (?), age = (?), employer_id = (?) WHERE id = (?)';
                                 return [4 /*yield*/, connection.execute(sql, [updatedEmployee.name, updatedEmployee.age, updatedEmployee.employer_id, employeeId])];
                             case 2:
                                 _ = (_a.sent())[0][0];
                                 console.log("Employee Data update!");
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                console.clear();
                                 return [2 /*return*/];
                         }
                     });
@@ -316,6 +311,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 _ = (_a.sent())[0][0];
                                 console.log('Employee Succesfully Deleted');
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                console.clear();
                                 return [2 /*return*/];
                         }
                     });
@@ -348,6 +344,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                             case 5:
                                 _b.sent();
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                console.clear();
                                 return [3 /*break*/, 12];
                             case 6: return [4 /*yield*/, editEmployee()];
                             case 7:

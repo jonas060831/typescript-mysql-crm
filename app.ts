@@ -26,26 +26,7 @@ let inMenu: boolean = true
 
 
 //classes
-class Company {
-        id?: number
-        name: string
-        constructor(name: string) {
-                this.name = name
-        }
-}
-
-class Employee {
-        id?: number
-        name: string
-        age : number
-        employer_id: number
-
-        constructor(name: string, age: number, employer_id: number) {
-                this.name = name
-                this.age = age
-                this.employer_id = employer_id
-        }
-}
+import { Company, Employee } from './classes';
         
 export const main = async() :Promise<void> => {
 
@@ -56,7 +37,7 @@ export const main = async() :Promise<void> => {
                 password: process.env.MYSQL_PASSWORD,
                 database: process.env.MYSQL_DATABASE,
         })
-
+        //CRUD companies
         const createCompany = async () :Promise<void> => {
                 const companyNameToAdd:string = questionToUser("Please Enter Company Name: ")
                 const query = 'INSERT INTO companies (name) VALUES (?)'
@@ -66,6 +47,7 @@ export const main = async() :Promise<void> => {
                 const [result] = await connection.execute(query, [newCompany.name])
                 console.log(`${companyNameToAdd} added successfully!`)
                 questionToUser("[PRESS ANY KEY TO CONTINUE]")
+                console.clear()
 
         }
         const showCompanies = async (): Promise<void> => {
@@ -92,6 +74,7 @@ export const main = async() :Promise<void> => {
                 const [result] : [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.execute(query, [updatedCompany.name, companyId])
                 console.log(`${updatedCompany.name} updated successfully!`)
                 questionToUser("[PRESS ANY KEY TO CONTINUE]")
+                console.clear()
         }
         const deleteCompany = async () :Promise<void> => {
                 await showCompanies()
@@ -103,6 +86,7 @@ export const main = async() :Promise<void> => {
 
                 console.log('Company Successfully Deleted')
                 questionToUser("[PRESS ANY KEY TO CONTINUE]")
+                console.clear()
         }
         const companySubMenu = async() :Promise<void> => {
                 
@@ -122,6 +106,7 @@ export const main = async() :Promise<void> => {
                                         console.log('All Companies:')
                                         await showCompanies()
                                         questionToUser("[PRESS ANY KEY TO CONTINUE]")
+                                        console.clear()
                                         break;
                                 case "3":
                                         
@@ -144,6 +129,7 @@ export const main = async() :Promise<void> => {
                 }
         }
 
+        //CRUD employees
         const createEmployee = async () :Promise<void> => {
 
                 const employeeNameToAdd: string = questionToUser("Please Enter Employee Name: ")
@@ -157,8 +143,8 @@ export const main = async() :Promise<void> => {
                 const [_] = await connection.execute(sql, [newEmployee.name, newEmployee.age, newEmployee.employer_id])
                 console.log(`${newEmployee.name} is saved.`)
                 questionToUser("[PRESS ANY KEY TO CONTINUE]")
+                console.clear()
         }
-
         const showEmployees = async () :Promise<void> => {
 
                 const sql = 'SELECT * FROM employees;'
@@ -168,9 +154,7 @@ export const main = async() :Promise<void> => {
                 employees.forEach(employee => {
                         console.log(`${employee.id} ${employee.name}`)
                 })
-
         }       
-        
         const showEmployeesByCompany = async () :Promise<void> => {
 
                 console.log('View Employees via Company: ')
@@ -182,17 +166,15 @@ export const main = async() :Promise<void> => {
                 
                 const [employees] :[mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.execute(sql, [selectedCompanyId])
                 
-
                 const sql2:string = 'SELECT name FROM companies WHERE id = (?)'
                 
                 //mysql.QueryResult, mysql.QueryResult any for now
                 const [[company]] :[mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.execute(sql2, [selectedCompanyId])
-                
                 if(employees.length === 0) {
                         console.log(`\nNO Employee Record found for ${company.name}\n`)
                 } else {
                         console.log(`${company.name} employees:`)
-                        employees.forEach((employee) => {
+                        employees.forEach(employee => {
                                 console.log(`${employee.id}. ${employee.name} ${employee.age}`)
                         })
                 }
@@ -215,9 +197,9 @@ export const main = async() :Promise<void> => {
 
                 console.log(`Employee Data update!`)
                 questionToUser("[PRESS ANY KEY TO CONTINUE]")
+                console.clear()
 
         }
-
         const deleteEmployee = async () :Promise<void> => {
 
                 await showEmployees()
@@ -230,6 +212,7 @@ export const main = async() :Promise<void> => {
                 console.log('Employee Succesfully Deleted')
 
                 questionToUser("[PRESS ANY KEY TO CONTINUE]")
+                console.clear()
         }
         const employeeSubMenu = async () :Promise<void> => {
                 let isOnEmployeeSubMenu: boolean = true
@@ -245,6 +228,7 @@ export const main = async() :Promise<void> => {
                                 case "2":
                                         await showEmployeesByCompany()
                                         questionToUser("[PRESS ANY KEY TO CONTINUE]")
+                                        console.clear()
                                         break;
                                 case "3":
                                         await editEmployee()
