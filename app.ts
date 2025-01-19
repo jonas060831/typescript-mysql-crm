@@ -154,7 +154,7 @@ export const main = async() :Promise<void> => {
 
                 const sql = 'INSERT INTO employees (name, age, employer_id) VALUES (?, ?, ?)'
 
-                const [result] = await connection.execute(sql, [newEmployee.name, newEmployee.age, newEmployee.employer_id])
+                const [_] = await connection.execute(sql, [newEmployee.name, newEmployee.age, newEmployee.employer_id])
                 console.log(`${newEmployee.name} is saved.`)
                 questionToUser("[PRESS ANY KEY TO CONTINUE]")
         }
@@ -211,11 +211,25 @@ export const main = async() :Promise<void> => {
 
                 const sql = 'UPDATE employees SET name = (?), age = (?), employer_id = (?) WHERE id = (?)'
 
-                const [[editedEmployee]]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.execute(sql, [updatedEmployee.name, updatedEmployee.age, updatedEmployee.employer_id, employeeId])
+                const [[_]]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.execute(sql, [updatedEmployee.name, updatedEmployee.age, updatedEmployee.employer_id, employeeId])
 
                 console.log(`Employee Data update!`)
                 questionToUser("[PRESS ANY KEY TO CONTINUE]")
 
+        }
+
+        const deleteEmployee = async () :Promise<void> => {
+
+                await showEmployees()
+
+                const employeeIdToDelete = questionToUser("Enter the Id of employee: ")
+                const sql:string = 'DELETE FROM employees WHERE id = (?)'
+
+                const [[_]] : [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.execute(sql, [employeeIdToDelete])
+
+                console.log('Employee Succesfully Deleted')
+
+                questionToUser("[PRESS ANY KEY TO CONTINUE]")
         }
         const employeeSubMenu = async () :Promise<void> => {
                 let isOnEmployeeSubMenu: boolean = true
@@ -236,7 +250,7 @@ export const main = async() :Promise<void> => {
                                         await editEmployee()
                                         break;
                                 case "4":
-                                        console.log('Delete Employee') 
+                                        await deleteEmployee()
                                         break;
                                 case "5":
                                         console.log("Back to main menu")

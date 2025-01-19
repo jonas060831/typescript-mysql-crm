@@ -73,7 +73,7 @@ var Employee = /** @class */ (function () {
     return Employee;
 }());
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, createCompany, showCompanies, editCompany, deleteCompany, companySubMenu, createEmployee, showEmployees, showEmployeesByCompany, editEmployee, employeeSubMenu, _a;
+    var connection, createCompany, showCompanies, editCompany, deleteCompany, companySubMenu, createEmployee, showEmployees, showEmployeesByCompany, editEmployee, deleteEmployee, employeeSubMenu, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, mysql.createConnection({
@@ -213,7 +213,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                     });
                 }); };
                 createEmployee = function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var employeeNameToAdd, employeeAgeToAdd, employerIdToAdd, newEmployee, sql, result;
+                    var employeeNameToAdd, employeeAgeToAdd, employerIdToAdd, newEmployee, sql, _;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -224,7 +224,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 sql = 'INSERT INTO employees (name, age, employer_id) VALUES (?, ?, ?)';
                                 return [4 /*yield*/, connection.execute(sql, [newEmployee.name, newEmployee.age, newEmployee.employer_id])];
                             case 1:
-                                result = (_a.sent())[0];
+                                _ = (_a.sent())[0];
                                 console.log("".concat(newEmployee.name, " is saved."));
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
                                 return [2 /*return*/];
@@ -279,7 +279,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                     });
                 }); };
                 editEmployee = function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var employeeId, employeeName, employeeAge, companyId, updatedEmployee, sql, editedEmployee;
+                    var employeeId, employeeName, employeeAge, companyId, updatedEmployee, sql, _;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -295,8 +295,26 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 sql = 'UPDATE employees SET name = (?), age = (?), employer_id = (?) WHERE id = (?)';
                                 return [4 /*yield*/, connection.execute(sql, [updatedEmployee.name, updatedEmployee.age, updatedEmployee.employer_id, employeeId])];
                             case 2:
-                                editedEmployee = (_a.sent())[0][0];
+                                _ = (_a.sent())[0][0];
                                 console.log("Employee Data update!");
+                                questionToUser("[PRESS ANY KEY TO CONTINUE]");
+                                return [2 /*return*/];
+                        }
+                    });
+                }); };
+                deleteEmployee = function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var employeeIdToDelete, sql, _;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, showEmployees()];
+                            case 1:
+                                _a.sent();
+                                employeeIdToDelete = questionToUser("Enter the Id of employee: ");
+                                sql = 'DELETE FROM employees WHERE id = (?)';
+                                return [4 /*yield*/, connection.execute(sql, [employeeIdToDelete])];
+                            case 2:
+                                _ = (_a.sent())[0][0];
+                                console.log('Employee Succesfully Deleted');
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
                                 return [2 /*return*/];
                         }
@@ -310,7 +328,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 isOnEmployeeSubMenu = true;
                                 _b.label = 1;
                             case 1:
-                                if (!isOnEmployeeSubMenu) return [3 /*break*/, 12];
+                                if (!isOnEmployeeSubMenu) return [3 /*break*/, 13];
                                 console.log('Employees Menu:\n\n1.Add Employee\n2.View All Employees\n3.Edit Employee\n4.Delete Employee\n5.Back to Main menu\n');
                                 employeeSubMenu_1 = questionToUser("Employees Menu[1~5]: ");
                                 _a = employeeSubMenu_1;
@@ -319,34 +337,35 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     case "2": return [3 /*break*/, 4];
                                     case "3": return [3 /*break*/, 6];
                                     case "4": return [3 /*break*/, 8];
-                                    case "5": return [3 /*break*/, 9];
+                                    case "5": return [3 /*break*/, 10];
                                 }
-                                return [3 /*break*/, 10];
+                                return [3 /*break*/, 11];
                             case 2: return [4 /*yield*/, createEmployee()];
                             case 3:
                                 _b.sent();
-                                return [3 /*break*/, 11];
+                                return [3 /*break*/, 12];
                             case 4: return [4 /*yield*/, showEmployeesByCompany()];
                             case 5:
                                 _b.sent();
                                 questionToUser("[PRESS ANY KEY TO CONTINUE]");
-                                return [3 /*break*/, 11];
+                                return [3 /*break*/, 12];
                             case 6: return [4 /*yield*/, editEmployee()];
                             case 7:
                                 _b.sent();
-                                return [3 /*break*/, 11];
-                            case 8:
-                                console.log('Delete Employee');
-                                return [3 /*break*/, 11];
+                                return [3 /*break*/, 12];
+                            case 8: return [4 /*yield*/, deleteEmployee()];
                             case 9:
+                                _b.sent();
+                                return [3 /*break*/, 12];
+                            case 10:
                                 console.log("Back to main menu");
                                 isOnEmployeeSubMenu = false;
-                                return [3 /*break*/, 11];
-                            case 10:
+                                return [3 /*break*/, 12];
+                            case 11:
                                 console.log("invalid input");
-                                return [3 /*break*/, 11];
-                            case 11: return [3 /*break*/, 1];
-                            case 12: return [2 /*return*/];
+                                return [3 /*break*/, 12];
+                            case 12: return [3 /*break*/, 1];
+                            case 13: return [2 /*return*/];
                         }
                     });
                 }); };
